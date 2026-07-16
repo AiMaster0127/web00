@@ -1,0 +1,1148 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>海老勢HP ドラフト（確認用プレビュー）</title>
+<style>
+/* ============================================================
+   わいわい肴屋 海老勢 — style.css
+   構成: トークン → ベース → 共通パーツ → コンポーネント → ページ補助
+   共通パーツとページ固有の境界を明確にし、詳細度は原則1クラスで統一。
+   ============================================================ */
+
+:root {
+  /* 色: 藍（暖簾）× 白（お品書きの紙）× 朱（提灯）。アクセントは朱の1色のみ */
+  --ink: #1B3246;
+  --ink-soft: #46586A;
+  --paper: #FBFAF7;
+  --paper-dim: #F2EFE9;
+  --indigo-deep: #122435;
+  --accent: #C73A2A;
+  --accent-dark: #A92F21;
+  --line: #DAD5CA;
+
+  --serif: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  --sans: system-ui, -apple-system, "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+          "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
+
+  --sp-1: 8px;
+  --sp-2: 16px;
+  --sp-3: 24px;
+  --sp-4: 40px;
+  --sp-5: 64px;
+  --section: clamp(64px, 12vw, 104px);
+
+  /* 青海波（店名の「海」から）。地色と同じ塗りで鱗状に重ねる */
+  --seigaiha-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Cg fill='%23FBFAF7' stroke='%231B3246' stroke-opacity='.12'%3E%3Ccircle cx='10' cy='0' r='9.5'/%3E%3Ccircle cx='10' cy='0' r='4.5'/%3E%3Ccircle cx='30' cy='0' r='9.5'/%3E%3Ccircle cx='30' cy='0' r='4.5'/%3E%3Ccircle cx='0' cy='10' r='9.5'/%3E%3Ccircle cx='0' cy='10' r='4.5'/%3E%3Ccircle cx='20' cy='10' r='9.5'/%3E%3Ccircle cx='20' cy='10' r='4.5'/%3E%3Ccircle cx='40' cy='10' r='9.5'/%3E%3Ccircle cx='40' cy='10' r='4.5'/%3E%3Ccircle cx='10' cy='20' r='9.5'/%3E%3Ccircle cx='10' cy='20' r='4.5'/%3E%3Ccircle cx='30' cy='20' r='9.5'/%3E%3Ccircle cx='30' cy='20' r='4.5'/%3E%3C/g%3E%3C/svg%3E");
+  --seigaiha-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Cg fill='%23122435' stroke='%23FBFAF7' stroke-opacity='.09'%3E%3Ccircle cx='10' cy='0' r='9.5'/%3E%3Ccircle cx='10' cy='0' r='4.5'/%3E%3Ccircle cx='30' cy='0' r='9.5'/%3E%3Ccircle cx='30' cy='0' r='4.5'/%3E%3Ccircle cx='0' cy='10' r='9.5'/%3E%3Ccircle cx='0' cy='10' r='4.5'/%3E%3Ccircle cx='20' cy='10' r='9.5'/%3E%3Ccircle cx='20' cy='10' r='4.5'/%3E%3Ccircle cx='40' cy='10' r='9.5'/%3E%3Ccircle cx='40' cy='10' r='4.5'/%3E%3Ccircle cx='10' cy='20' r='9.5'/%3E%3Ccircle cx='10' cy='20' r='4.5'/%3E%3Ccircle cx='30' cy='20' r='9.5'/%3E%3Ccircle cx='30' cy='20' r='4.5'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------
+   ベース（日本語組版の床）
+   ------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.9;
+  letter-spacing: 0.04em;
+  font-feature-settings: "palt" 1;
+  line-break: strict;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.06em;
+  margin: 0 0 var(--sp-3);
+}
+
+h1 { font-size: clamp(28px, 6.5vw, 44px); }
+h2 { font-size: clamp(22px, 4.8vw, 32px); }
+h3 { font-size: 19px; margin-bottom: var(--sp-2); }
+
+p, ul, ol, dl { margin: 0 0 1.4em; }
+p { max-width: 40em; } /* 行長を35〜45字で止める */
+small { font-size: 13px; }
+
+a { color: inherit; text-underline-offset: 0.25em; }
+a:hover { color: var(--accent-dark); }
+
+img { max-width: 100%; height: auto; display: block; }
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.nowrap { display: inline-block; } /* 見出しを意味の単位で折る */
+
+/* URL等のはみ出しは要素単位でだけ許す（全体には当てない） */
+.breakable { overflow-wrap: anywhere; }
+
+.skip-link {
+  position: absolute; left: 8px; top: -48px; z-index: 100;
+  background: var(--ink); color: #fff; padding: 10px 16px;
+  text-decoration: none; transition: top 0.15s;
+}
+.skip-link:focus { top: 8px; }
+
+/* ------------------------------------------------------------
+   レイアウトユーティリティ
+   ------------------------------------------------------------ */
+.section { padding-block: var(--section); }
+.section--dim { background: var(--paper-dim); }
+.section__in { max-width: 1120px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 32px); }
+.u-center { text-align: center; }
+.u-center p { margin-inline: auto; }
+.u-note { font-size: 13px; color: var(--ink-soft); }
+.measure { max-width: 40em; }
+
+.btn-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; }
+.u-center .btn-row { justify-content: center; }
+
+.split { display: grid; gap: var(--sp-4); align-items: center; }
+@media (min-width: 900px) { .split { grid-template-columns: 1fr 1fr; } }
+
+/* ------------------------------------------------------------
+   共通パーツ: ボタン
+   文言は動詞で統一（電話をかける／ネット予約する）
+   ------------------------------------------------------------ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 10px 26px;
+  font-weight: 700; font-size: 16px; line-height: 1.5;
+  text-decoration: none; border-radius: 2px;
+  border: 2px solid transparent; cursor: pointer;
+}
+.btn--primary { background: var(--accent); color: #fff; }
+.btn--primary:hover { background: var(--accent-dark); color: #fff; }
+.btn--ghost { border-color: var(--ink); color: var(--ink); background: transparent; }
+.btn--ghost:hover { background: var(--ink); color: var(--paper); }
+.btn--ghost-light { border-color: #fff; color: #fff; background: transparent; }
+.btn--ghost-light:hover { background: #fff; color: var(--indigo-deep); }
+.btn .ext { font-size: 13px; }
+
+/* ------------------------------------------------------------
+   共通パーツ: ヘッダー
+   ------------------------------------------------------------ */
+.site-head {
+  background: var(--paper);
+  border-top: 4px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+.site-head__in {
+  max-width: 1120px; margin-inline: auto;
+  padding: 10px clamp(16px, 4vw, 32px) 0;
+  display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--sp-4);
+}
+.brand { text-decoration: none; color: var(--ink); line-height: 1.35; padding-bottom: 8px; }
+.brand:hover { color: var(--ink); }
+.brand .sub { display: block; font-size: 11px; letter-spacing: 0.3em; color: var(--ink-soft); }
+.brand .name { font-family: var(--serif); font-size: 26px; font-weight: 700; letter-spacing: 0.14em; }
+
+.site-nav { margin-left: auto; }
+.site-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 2px; }
+.site-nav a {
+  display: inline-flex; align-items: center;
+  min-height: 44px; padding: 4px 12px;
+  font-size: 15px; font-weight: 700; text-decoration: none;
+  border-bottom: 3px solid transparent;
+}
+.site-nav a:hover { border-bottom-color: var(--line); color: var(--ink); }
+.site-nav a[aria-current="page"] { border-bottom-color: var(--accent); }
+
+.head-tel { display: none; }
+
+@media (min-width: 900px) {
+  .site-head__in { padding-bottom: 0; }
+  .head-tel { display: inline-flex; min-height: 42px; margin-left: var(--sp-2); margin-bottom: 6px; }
+}
+@media (max-width: 899px) {
+  .site-nav { margin-left: 0; width: 100%; }
+  .site-nav ul { justify-content: space-between; }
+  .site-nav a { padding: 4px 6px; }
+}
+
+/* ------------------------------------------------------------
+   共通パーツ: パンくず
+   ------------------------------------------------------------ */
+.crumbs { font-size: 13px; color: var(--ink-soft); padding-top: var(--sp-2); }
+.crumbs ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; }
+.crumbs li + li::before { content: "›"; margin: 0 8px; }
+.crumbs a { color: inherit; }
+
+/* ------------------------------------------------------------
+   共通パーツ: ヒーロー／ページ見出し
+   ------------------------------------------------------------ */
+.hero {
+  background-color: var(--paper);
+  background-image: var(--seigaiha-light);
+  background-size: 56px 28px;
+  padding-block: clamp(56px, 11vw, 112px);
+}
+.hero h1 { font-size: clamp(30px, 7.6vw, 54px); margin-bottom: var(--sp-3); }
+.hero .lead { font-size: 17px; }
+
+.kicker {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.18em;
+  color: var(--ink-soft); margin-bottom: var(--sp-2);
+}
+.kicker::before { content: ""; width: 9px; height: 9px; background: var(--accent); flex: none; }
+
+.page-head {
+  background-color: var(--paper);
+  background-image: var(--seigaiha-light);
+  background-size: 56px 28px;
+  padding-block: 0 clamp(36px, 6vw, 56px);
+}
+.page-head h1 { margin-top: var(--sp-4); }
+.page-head .lead { font-size: 17px; margin-bottom: 0; }
+
+/* 営業時間の即答帯 */
+.info-band {
+  display: flex; flex-wrap: wrap; gap: 4px var(--sp-4);
+  border-block: 1px solid var(--line);
+  padding: 12px 0; margin: var(--sp-4) 0;
+  font-size: 15px; background: transparent;
+}
+.info-band > div { display: flex; gap: 12px; align-items: baseline; }
+.info-band dt {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.14em;
+  color: var(--paper); background: var(--ink);
+  padding: 1px 8px; white-space: nowrap;
+}
+.info-band dd { margin: 0; font-weight: 700; }
+.info-band small { color: var(--ink-soft); font-weight: 400; }
+
+/* ------------------------------------------------------------
+   共通パーツ: セクション見出し＋短冊ラベル（シグネチャ）
+   縦書きは装飾ラベルのみ。本文には使わない
+   ------------------------------------------------------------ */
+.sec-head { display: flex; align-items: flex-start; gap: var(--sp-2); margin-bottom: var(--sp-4); }
+.fuda {
+  display: inline-grid; place-items: center;
+  min-width: 36px; min-height: 48px;
+  font-family: var(--serif); font-weight: 700; font-size: 18px;
+  line-height: 1;
+  background: var(--ink); color: var(--paper);
+  flex: none;
+}
+.sec-head h2 { margin-bottom: 0; padding-top: 2px; }
+.sec-head .sec-lead { margin: 4px 0 0; color: var(--ink-soft); font-size: 15px; }
+
+/* ------------------------------------------------------------
+   共通パーツ: 短冊カード
+   ------------------------------------------------------------ */
+.tanzaku-grid { display: grid; gap: var(--sp-3); grid-template-columns: 1fr; }
+@media (min-width: 720px) { .tanzaku-grid { grid-template-columns: repeat(3, 1fr); } }
+
+.tanzaku {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--ink);
+  padding: var(--sp-3) var(--sp-3) var(--sp-4);
+}
+.tanzaku h3 { display: flex; gap: 10px; align-items: baseline; }
+.tanzaku h3::before { content: ""; width: 8px; height: 8px; background: var(--accent); flex: none; align-self: flex-start; margin-top: 9px; }
+.tanzaku p { margin-bottom: 0; font-size: 15px; color: var(--ink-soft); }
+
+/* ------------------------------------------------------------
+   共通パーツ: お品書きリスト
+   ------------------------------------------------------------ */
+.dish-list { list-style: none; margin: 0 0 var(--sp-3); padding: 0; max-width: 40em; }
+.dish-list li {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 12px 2px; border-bottom: 1px dashed var(--line);
+}
+.dish-list .dots { flex: 1; border-bottom: 1px dotted var(--line); transform: translateY(-4px); }
+.dish-list .price {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft); white-space: nowrap; font-size: 15px;
+}
+
+/* ------------------------------------------------------------
+   共通パーツ: 表（店舗情報など）
+   ------------------------------------------------------------ */
+.info-table { width: 100%; max-width: 44em; border-collapse: collapse; margin-bottom: var(--sp-3); }
+.info-table th, .info-table td {
+  text-align: left; vertical-align: top;
+  padding: 14px 8px; border-bottom: 1px solid var(--line);
+  font-size: 15px;
+}
+.info-table th { width: 7.5em; font-weight: 700; white-space: nowrap; }
+
+/* ------------------------------------------------------------
+   共通パーツ: FAQ
+   ------------------------------------------------------------ */
+.faq { max-width: 44em; }
+.faq dt {
+  display: flex; gap: 12px; font-weight: 700; margin-bottom: 8px;
+}
+.faq dt::before { content: "問"; color: var(--paper); background: var(--accent); font-size: 13px; padding: 1px 7px; align-self: flex-start; margin-top: 5px; flex: none; }
+.faq dd { margin: 0 0 var(--sp-3); padding-left: 42px; color: var(--ink-soft); }
+
+/* ------------------------------------------------------------
+   共通パーツ: 写真スロット（支給待ち）
+   実写と誤解される画像は置かない。支給後に <img> へ差し替える
+   ------------------------------------------------------------ */
+.ph {
+  background-color: var(--indigo-deep);
+  background-image: var(--seigaiha-dark);
+  background-size: 56px 28px;
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  aspect-ratio: 3 / 2; text-align: center; padding: var(--sp-2);
+}
+.ph span { font-size: 13px; letter-spacing: 0.12em; opacity: 0.92; }
+
+/* ------------------------------------------------------------
+   共通パーツ: 地図
+   ------------------------------------------------------------ */
+.map-embed { width: 100%; aspect-ratio: 4 / 3; border: 1px solid var(--line); }
+@media (min-width: 720px) { .map-embed { aspect-ratio: 16 / 9; } }
+
+/* ------------------------------------------------------------
+   共通パーツ: CTAブロック（全ページ下部）
+   ------------------------------------------------------------ */
+.cta-block {
+  background-color: var(--indigo-deep);
+  background-image: var(--seigaiha-dark);
+  background-size: 56px 28px;
+  color: #fff;
+  padding-block: var(--sp-5);
+}
+.cta-block h2 { color: #fff; }
+.cta-block .cta-hours { font-size: 14px; color: rgba(255, 255, 255, 0.88); margin-bottom: var(--sp-3); }
+.cta-block .u-note { color: rgba(255, 255, 255, 0.8); margin-top: var(--sp-2); }
+.cta-block a:hover { color: #fff; }
+.cta-block :focus-visible { outline-color: #fff; }
+
+/* ------------------------------------------------------------
+   共通パーツ: フッター
+   ------------------------------------------------------------ */
+.site-foot {
+  background: var(--indigo-deep);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  padding: var(--sp-5) 0 var(--sp-4);
+}
+.site-foot__in {
+  max-width: 1120px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 32px);
+  display: grid; gap: var(--sp-4);
+}
+@media (min-width: 720px) { .site-foot__in { grid-template-columns: 1.4fr 1fr; } }
+.site-foot .name { font-family: var(--serif); font-size: 20px; letter-spacing: 0.14em; margin-bottom: 4px; }
+.site-foot p { max-width: none; margin-bottom: 0.6em; }
+.site-foot a { color: #fff; }
+.site-foot :focus-visible { outline-color: #fff; }
+.foot-nav ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.foot-nav a { display: inline-flex; min-height: 32px; align-items: center; text-decoration: none; }
+.foot-nav a:hover { text-decoration: underline; }
+.copyright { margin-top: var(--sp-4); font-size: 12px; color: rgba(255, 255, 255, 0.65); }
+
+/* ------------------------------------------------------------
+   共通パーツ: モバイル追従バー（親指の届く位置にCTA）
+   ------------------------------------------------------------ */
+.mobile-bar {
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 60;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--ink);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.mobile-bar a {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 56px; font-size: 15px; font-weight: 700; text-decoration: none;
+}
+.mobile-bar .bar-tel { background: var(--accent); color: #fff; }
+.mobile-bar .bar-net { background: #fff; color: var(--ink); }
+.mobile-bar :focus-visible { outline-offset: -4px; outline-color: var(--ink); }
+.mobile-bar .bar-tel:focus-visible { outline-color: #fff; }
+
+body { padding-bottom: calc(57px + env(safe-area-inset-bottom)); }
+@media (min-width: 900px) {
+  .mobile-bar { display: none; }
+  body { padding-bottom: 0; }
+}
+
+/* ------------------------------------------------------------
+   共通パーツ: フォーム
+   ラベルは必ず置く。エラーは項目の隣に出す
+   ------------------------------------------------------------ */
+.form { max-width: 560px; }
+.field { margin-bottom: var(--sp-3); }
+.field > label { display: block; font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+.tag {
+  display: inline-block; font-size: 11px; font-weight: 700;
+  padding: 1px 8px; margin-left: 8px; vertical-align: 2px; letter-spacing: 0.08em;
+}
+.tag--req { background: var(--accent); color: #fff; }
+.tag--opt { background: var(--paper-dim); color: var(--ink-soft); border: 1px solid var(--line); }
+
+.field input[type="text"],
+.field input[type="tel"],
+.field input[type="date"],
+.field textarea {
+  width: 100%; font: inherit; font-size: 16px; letter-spacing: inherit;
+  padding: 12px 14px; color: var(--ink); background: #fff;
+  border: 1.5px solid var(--ink-soft); border-radius: 2px;
+}
+.field textarea { min-height: 120px; resize: vertical; }
+.field input[aria-invalid="true"] { border-color: var(--accent); background: #FDF6F5; }
+.field__hint { font-size: 13px; color: var(--ink-soft); margin-top: 6px; }
+.field__error { display: none; font-size: 14px; font-weight: 700; color: var(--accent-dark); margin-top: 6px; }
+.field.is-error .field__error { display: block; }
+
+.check { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 15px; }
+.check input { width: 20px; height: 20px; accent-color: var(--accent); }
+
+.form-note {
+  border-left: 3px solid var(--accent);
+  padding: 6px 0 6px 16px; margin-bottom: var(--sp-3);
+  font-size: 15px; font-weight: 700;
+}
+.form-note small { display: block; font-weight: 400; color: var(--ink-soft); }
+
+.form-status { display: none; border: 2px solid var(--ink); background: #fff; padding: var(--sp-3); }
+.form-status.is-visible { display: block; }
+.form-status h3 { margin-bottom: 8px; }
+.form-status p { margin-bottom: 0; font-size: 15px; }
+
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; } /* honeypot */
+
+/* 電話番号の大表示（予約ページ） */
+.tel-big {
+  display: inline-block; text-decoration: none;
+  font-size: clamp(30px, 9vw, 48px); font-weight: 800;
+  letter-spacing: 0.04em; font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.tel-big:hover { color: var(--accent-dark); }
+
+/* ------------------------------------------------------------
+   モーション: ヒーロー1箇所のみ。reduced-motion では無効
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal { animation: rise 0.6s ease-out both; }
+  .reveal:nth-child(2) { animation-delay: 0.08s; }
+  .reveal:nth-child(3) { animation-delay: 0.16s; }
+  .reveal:nth-child(4) { animation-delay: 0.24s; }
+  .reveal:nth-child(5) { animation-delay: 0.3s; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* --- プレビュー専用 --- */
+.preview-banner {
+  background: #7A2318; color: #fff; font-size: 13px; letter-spacing: 0.06em;
+  text-align: center; padding: 8px 16px;
+}
+.page { display: none; }
+.page.is-active { display: block; }
+</style>
+<p class="preview-banner">確認用プレビュー｜制作中のドラフトです。電話番号・住所・価格（—）は仮の表記で、公開前に差し替えます。</p>
+<header class="site-head">
+  <div class="site-head__in">
+    <a class="brand" href="/">
+      <span class="sub">三条市東三条・JR東三条駅前</span>
+      <span class="name">わいわい肴屋 海老勢</span>
+    </a>
+    <nav class="site-nav" aria-label="サイト内メニュー">
+      <ul>
+        <li><a href="/menu/">お品書き</a></li>
+        <li><a href="/party/">ご宴会</a></li>
+        <li><a href="/access/">店舗案内</a></li>
+        <li><a href="/reserve/">ご予約</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--primary head-tel" href="tel:0000000000">電話をかける（0256-XX-XXXX）</a>
+  </div>
+</header>
+<div class="page is-active" data-path="/">
+
+<main>
+<section class="hero">
+  <div class="section__in">
+    <p class="kicker reveal">三条市東三条｜JR東三条駅から徒歩1分</p>
+    <h1 class="reveal"><span class="nowrap">今日の魚は、</span><span class="nowrap">今日の市場で決めてきた。</span></h1>
+    <p class="lead measure reveal">わいわい肴屋 海老勢（えびせ）は、東三条駅前の居酒屋です。昼は定食とカレーラーメン、夜は肴と酒、宴会はぜんぶ個別盛り。</p>
+    <dl class="info-band reveal">
+      <div><dt>営業時間</dt><dd>昼 11:00–14:30／夜 17:00–23:00 <small>（日・祝は22:00まで）</small></dd></div>
+      <div><dt>定休日</dt><dd>月曜</dd></div>
+    </dl>
+    <div class="btn-row reveal">
+      <a class="btn btn--primary" href="tel:0000000000">電話をかける（0256-XX-XXXX）</a>
+      <a class="btn btn--ghost" href="https://www.hotpepper.jp/strJ000334858/" target="_blank" rel="noopener">ネット予約する<span class="ext" aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--dim" aria-labelledby="policy-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">決</span>
+      <h2 id="policy-title">海老勢の決めごと</h2>
+    </div>
+    <div class="tanzaku-grid">
+      <article class="tanzaku">
+        <h3>魚は、毎日市場で買い付ける</h3>
+        <p>質のいいものだけを、毎日市場で見て選ぶ。お品書きの主役は、その日の魚です。</p>
+      </article>
+      <article class="tanzaku">
+        <h3>米はコシヒカリ。冷凍野菜は使わない</h3>
+        <p>定食の一膳も、宴会の締めも、米は新潟県産コシヒカリ。野菜も冷凍物を使いません。</p>
+      </article>
+      <article class="tanzaku">
+        <h3>宴会は、全品個別盛り</h3>
+        <p>大皿を取り分ける気疲れがありません。遠慮して食べそこねることも、ありません。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="party-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">宴</span>
+      <h2 id="party-title">大皿を、<span class="nowrap">囲まなくていい宴会。</span></h2>
+    </div>
+    <div class="split">
+      <div>
+        <p>コースは全品、ひとりずつの個別盛り。2時間飲み放題付きコースは4名様から承ります。集合も解散も、駅から徒歩1分。</p>
+        <div class="btn-row">
+          <a class="btn btn--ghost" href="/party/">宴会コースを見る</a>
+        </div>
+      </div>
+      <figure class="ph">
+        <span>写真が入ります<br>（宴会コースの個別盛り・俯瞰）</span>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="section section--dim" aria-labelledby="menu-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">品</span>
+      <h2 id="menu-title">短冊は、仕入れで変わる。</h2>
+    </div>
+    <p class="measure">刺身盛り、生カキ、バイ貝の酒蒸し、もつ煮込み、厚焼き玉子——。本日の短冊は、店内でご覧ください。お昼は定食・丼、カレーラーメンも。</p>
+    <div class="btn-row">
+      <a class="btn btn--ghost" href="/menu/">お品書きを見る</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="access-title">
+  <div class="section__in">
+    <div class="split">
+      <div>
+        <div class="sec-head">
+          <span class="fuda" aria-hidden="true">所</span>
+          <h2 id="access-title">JR東三条駅の、目の前。</h2>
+        </div>
+        <p>改札から徒歩1分。お車の方は専用駐車場をご利用ください。</p>
+        <p>〒955-0047 新潟県三条市東三条1丁目X-XX<br>電話: <a href="tel:0000000000">0256-XX-XXXX</a></p>
+        <div class="btn-row">
+          <a class="btn btn--ghost" href="/access/">店舗案内・地図を見る</a>
+        </div>
+      </div>
+      <figure class="ph">
+        <span>写真が入ります<br>（店舗外観・駅ホーム側から看板が読める距離で）</span>
+      </figure>
+    </div>
+  </div>
+</section>
+</main>
+
+<section class="cta-block">
+  <div class="section__in u-center">
+    <h2>今夜の席、お取りします。</h2>
+    <p class="cta-hours">昼 11:00–14:30／夜 17:00–23:00（日・祝は22:00まで）｜月曜定休</p>
+    <div class="btn-row">
+      <a class="btn btn--primary" href="tel:0000000000">電話をかける（0256-XX-XXXX）</a>
+      <a class="btn btn--ghost-light" href="https://www.hotpepper.jp/strJ000334858/" target="_blank" rel="noopener">ネット予約する<span class="ext" aria-hidden="true">↗</span></a>
+    </div>
+    <p class="u-note">宴会のご相談は<a href="/reserve/#form">フォーム</a>でも受け付けています。</p>
+  </div>
+</section>
+</div>
+<div class="page" data-path="/menu/">
+<nav class="crumbs section__in" aria-label="現在地"><ol><li><a href="/">トップ</a></li><li aria-current="page">お品書き</li></ol></nav>
+<main>
+<div class="page-head">
+  <div class="section__in">
+    <h1>お品書き</h1>
+    <p class="lead measure">ここは東三条駅前の肴屋、海老勢のお品書きです。魚は毎日市場で買い付けるため、短冊は日々入れ替わります。このページは定番のご案内です。</p>
+    <p class="u-note">価格は現在準備中です。お電話でご確認ください。</p>
+  </div>
+</div>
+
+<section class="section" id="lunch" aria-labelledby="lunch-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">昼</span>
+      <div>
+        <h2 id="lunch-title">昼のお品書き</h2>
+        <p class="sec-lead">11:00–14:30｜米は新潟県産コシヒカリです。</p>
+      </div>
+    </div>
+    <ul class="dish-list">
+      <li>カレーラーメン<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+      <li>日替わりの定食<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+      <li>丼もの<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+    </ul>
+    <p class="u-note">内容は日により変わります。</p>
+  </div>
+</section>
+
+<section class="section section--dim" id="dinner" aria-labelledby="dinner-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">肴</span>
+      <div>
+        <h2 id="dinner-title">夜のお品書き</h2>
+        <p class="sec-lead">17:00–｜その日の魚から始めてください。短冊の主役は刺身。あとはお好みで。</p>
+      </div>
+    </div>
+    <ul class="dish-list">
+      <li>刺身盛り<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+      <li>生カキ<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+      <li>バイ貝の酒蒸し<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+      <li>もつ煮込み<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+      <li>厚焼き玉子<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+      <li>焼き物・揚げ物 各種<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+      <li>サラダ・一品 各種<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+    </ul>
+    <p class="u-note">品切れはご容赦ください。本日の短冊は店内で。</p>
+  </div>
+</section>
+
+<section class="section" id="drink" aria-labelledby="drink-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">酒</span>
+      <h2 id="drink-title">お飲み物</h2>
+    </div>
+    <ul class="dish-list">
+      <li>生ビール<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+      <li>日本酒<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+      <li>焼酎・サワー・ハイボール<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+      <li>ソフトドリンク<span class="dots" aria-hidden="true"></span><span class="price">—</span></li>
+    </ul>
+    <p>2時間飲み放題付きの宴会コース（4名様から）もあります。<a href="/party/">ご宴会・コースのページへ</a></p>
+  </div>
+</section>
+</main>
+
+<section class="cta-block">
+  <div class="section__in u-center">
+    <h2>今夜の席、お取りします。</h2>
+    <p class="cta-hours">昼 11:00–14:30／夜 17:00–23:00（日・祝は22:00まで）｜月曜定休</p>
+    <div class="btn-row">
+      <a class="btn btn--primary" href="tel:0000000000">電話をかける（0256-XX-XXXX）</a>
+      <a class="btn btn--ghost-light" href="https://www.hotpepper.jp/strJ000334858/" target="_blank" rel="noopener">ネット予約する<span class="ext" aria-hidden="true">↗</span></a>
+    </div>
+    <p class="u-note">宴会のご相談は<a href="/reserve/#form">フォーム</a>でも受け付けています。</p>
+  </div>
+</section>
+</div>
+<div class="page" data-path="/party/">
+<nav class="crumbs section__in" aria-label="現在地"><ol><li><a href="/">トップ</a></li><li aria-current="page">ご宴会・コース</li></ol></nav>
+<main>
+<div class="page-head">
+  <div class="section__in">
+    <h1>大皿を、<span class="nowrap">囲まなくていい宴会。</span></h1>
+    <p class="lead measure">海老勢のコースは、全品ひとりずつの個別盛りです。取り分ける人も、遠慮して待つ人もいません。2時間飲み放題付きコースは4名様から。</p>
+  </div>
+</div>
+
+<section class="section" aria-labelledby="worry-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">宴</span>
+      <h2 id="worry-title">幹事さんの気がかりに、<span class="nowrap">先に答えます。</span></h2>
+    </div>
+    <div class="tanzaku-grid">
+      <article class="tanzaku">
+        <h3>取り分けがない</h3>
+        <p>全品個別盛り。手を伸ばしにくい上座も下座もなく、自分のペースで食べられます。</p>
+      </article>
+      <article class="tanzaku">
+        <h3>飲み放題は4名様から</h3>
+        <p>2時間飲み放題付きのコースを4名様から承ります。人数・ご予算はお電話でご相談ください。</p>
+      </article>
+      <article class="tanzaku">
+        <h3>駅から徒歩1分</h3>
+        <p>JR東三条駅の目の前。電車組は集合が楽、車組は専用駐車場へ。解散後の流れも駅前です。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section--dim" aria-labelledby="course-title">
+  <div class="section__in">
+    <div class="split">
+      <div>
+        <h2 id="course-title">コースのご案内</h2>
+        <p>コースの内容と料金は、時期の魚と人数に合わせて組みます。まずは人数と日取り、おおよそのご予算をお電話でどうぞ。</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="tel:0000000000">電話をかける（0256-XX-XXXX）</a>
+        </div>
+      </div>
+      <figure class="ph">
+        <span>写真が入ります<br>（コース料理の個別盛り・1人前を正面から）</span>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="faq-title">
+  <div class="section__in">
+    <h2 id="faq-title">よくあるご質問</h2>
+    <dl class="faq">
+      <dt>飲み放題は何名から使えますか？</dt>
+      <dd>2時間飲み放題付きコースを4名様から承っています。</dd>
+      <dt>料理は大皿ですか？</dt>
+      <dd>いいえ。コースは全品、ひとりずつの個別盛りです。</dd>
+      <dt>車で行けますか？</dt>
+      <dd>専用駐車場があります。台数はお電話でご確認ください。</dd>
+      <dt>苦手な食材があります。</dt>
+      <dd>ご予約の際にご相談ください。</dd>
+    </dl>
+    <p class="measure">日程が決まっていなくても、ご相談だけで構いません。<a href="/reserve/#form">宴会相談フォーム</a>でも受け付けています。</p>
+  </div>
+</section>
+</main>
+
+<section class="cta-block">
+  <div class="section__in u-center">
+    <h2>今夜の席、お取りします。</h2>
+    <p class="cta-hours">昼 11:00–14:30／夜 17:00–23:00（日・祝は22:00まで）｜月曜定休</p>
+    <div class="btn-row">
+      <a class="btn btn--primary" href="tel:0000000000">電話をかける（0256-XX-XXXX）</a>
+      <a class="btn btn--ghost-light" href="https://www.hotpepper.jp/strJ000334858/" target="_blank" rel="noopener">ネット予約する<span class="ext" aria-hidden="true">↗</span></a>
+    </div>
+    <p class="u-note">宴会のご相談は<a href="/reserve/#form">フォーム</a>でも受け付けています。</p>
+  </div>
+</section>
+</div>
+<div class="page" data-path="/access/">
+<nav class="crumbs section__in" aria-label="現在地"><ol><li><a href="/">トップ</a></li><li aria-current="page">店舗案内・アクセス</li></ol></nav>
+<main>
+<div class="page-head">
+  <div class="section__in">
+    <h1>店舗案内・アクセス</h1>
+    <p class="lead measure">JR東三条駅の目の前です。改札から徒歩1分、お車の方は専用駐車場へ。</p>
+  </div>
+</div>
+
+<section class="section" aria-labelledby="info-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">所</span>
+      <h2 id="info-title">店舗情報</h2>
+    </div>
+    <table class="info-table">
+      <tbody>
+        <tr><th scope="row">店名</th><td>わいわい肴屋 海老勢（えびせ）</td></tr>
+        <tr><th scope="row">住所</th><td>〒955-0047 新潟県三条市東三条1丁目X-XX</td></tr>
+        <tr><th scope="row">電話</th><td><a href="tel:0000000000">0256-XX-XXXX</a></td></tr>
+        <tr><th scope="row">営業時間</th><td>昼 11:00–14:30／夜 17:00–23:00（日・祝は22:00まで）</td></tr>
+        <tr><th scope="row">定休日</th><td>月曜</td></tr>
+        <tr><th scope="row">駐車場</th><td>専用駐車場あり（台数はお電話でご確認ください）</td></tr>
+        <tr><th scope="row">アクセス</th><td>JR信越本線・弥彦線「東三条駅」から徒歩1分</td></tr>
+      </tbody>
+    </table>
+    <p class="u-note">営業時間・定休日は変わることがあります。ご来店前にお電話でご確認ください。</p>
+  </div>
+</section>
+
+<section class="section section--dim" aria-labelledby="map-title">
+  <div class="section__in">
+    <h2 id="map-title">地図</h2>
+    <div class="map-embed ph" style="aspect-ratio:16/9"><span>Googleマップが入ります<br>（本番サイトで表示されます）</span></div>
+    <p><a href="https://www.google.com/maps?q=%E3%82%8F%E3%81%84%E3%82%8F%E3%81%84%E8%82%B4%E5%B1%8B%20%E6%B5%B7%E8%80%81%E5%8B%A2%20%E4%B8%89%E6%9D%A1%E5%B8%82" target="_blank" rel="noopener">Googleマップで開く<span class="ext" aria-hidden="true">↗</span></a></p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="way-title">
+  <div class="section__in">
+    <div class="split">
+      <div>
+        <h2 id="way-title">行き方</h2>
+        <h3>電車でお越しの方</h3>
+        <p>JR東三条駅の改札を出て、駅前すぐです。</p>
+        <h3>お車でお越しの方</h3>
+        <p>専用駐車場をご利用ください。満車の際はお電話ください。</p>
+      </div>
+      <figure class="ph">
+        <span>写真が入ります<br>（店舗外観・駅改札側から）</span>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="section section--dim" aria-labelledby="sister-title">
+  <div class="section__in">
+    <h2 id="sister-title">姉妹店「海茶屋」</h2>
+    <p class="measure">同じ東三条に、姉妹店の海茶屋があります。人数やご予定に合わせてご案内できますので、お電話の際にご相談ください。</p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="company-title">
+  <div class="section__in">
+    <h2 id="company-title">運営会社</h2>
+    <table class="info-table">
+      <tbody>
+        <tr><th scope="row">会社名</th><td>株式会社ゑびせ</td></tr>
+        <tr><th scope="row">所在地</th><td>〒955-0047 新潟県三条市東三条1丁目X-XX</td></tr>
+        <tr><th scope="row">事業内容</th><td>飲食店の運営（海老勢・海茶屋）</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+</main>
+
+<section class="cta-block">
+  <div class="section__in u-center">
+    <h2>今夜の席、お取りします。</h2>
+    <p class="cta-hours">昼 11:00–14:30／夜 17:00–23:00（日・祝は22:00まで）｜月曜定休</p>
+    <div class="btn-row">
+      <a class="btn btn--primary" href="tel:0000000000">電話をかける（0256-XX-XXXX）</a>
+      <a class="btn btn--ghost-light" href="https://www.hotpepper.jp/strJ000334858/" target="_blank" rel="noopener">ネット予約する<span class="ext" aria-hidden="true">↗</span></a>
+    </div>
+    <p class="u-note">宴会のご相談は<a href="/reserve/#form">フォーム</a>でも受け付けています。</p>
+  </div>
+</section>
+</div>
+<div class="page" data-path="/reserve/">
+<nav class="crumbs section__in" aria-label="現在地"><ol><li><a href="/">トップ</a></li><li aria-current="page">ご予約・お問い合わせ</li></ol></nav>
+<main>
+<div class="page-head">
+  <div class="section__in">
+    <h1>ご予約・お問い合わせ</h1>
+    <p class="lead measure">お席の予約は、お電話がいちばん早く確実です。宴会のご相談は、フォームからも受け付けています。</p>
+  </div>
+</div>
+
+<section class="section" aria-labelledby="tel-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">電</span>
+      <h2 id="tel-title">電話で予約する</h2>
+    </div>
+    <p><a class="tel-big" href="tel:0000000000">0256-XX-XXXX</a></p>
+    <p>受付は営業時間内（昼 11:00–14:30／夜 17:00–23:00、月曜定休）。<br>今夜の一席も、来月の宴会も、同じ番号で承ります。</p>
+  </div>
+</section>
+
+<section class="section section--dim" aria-labelledby="net-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">網</span>
+      <h2 id="net-title">ネット予約する</h2>
+    </div>
+    <p class="measure">営業時間外の方や、電話が苦手な方はこちらから。</p>
+    <div class="btn-row">
+      <a class="btn btn--ghost" href="https://www.hotpepper.jp/strJ000334858/" target="_blank" rel="noopener">ホットペッパーで予約する<span class="ext" aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="form" aria-labelledby="form-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">宴</span>
+      <h2 id="form-title">宴会の相談をする</h2>
+    </div>
+    <p class="measure">日程が決まっていなくても構いません。人数とご予算の目安だけで、コースのご提案ができます。</p>
+
+    <div class="form-status" id="form-done" role="status" tabindex="-1">
+      <h3>送信しました</h3>
+      <p>翌営業日までにお電話でご連絡します。お急ぎの場合は <a href="tel:0000000000">0256-XX-XXXX</a> へお電話ください。</p>
+    </div>
+
+    <form class="form" name="party-consult" method="POST" action="/reserve/" data-netlify="true" data-netlify-honeypot="company" data-consult-form>
+      <input type="hidden" name="form-name" value="party-consult">
+      <p class="hp-field" aria-hidden="true">
+        <label>この欄には入力しないでください<input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+      </p>
+
+      <div class="field">
+        <label for="f-name">お名前<span class="tag tag--req">必須</span></label>
+        <input type="text" id="f-name" name="name" autocomplete="name" required>
+        <p class="field__error"></p>
+      </div>
+
+      <div class="field">
+        <label for="f-tel">お電話番号<span class="tag tag--req">必須</span></label>
+        <input type="tel" id="f-tel" name="tel" inputmode="numeric" autocomplete="tel" required>
+        <p class="field__hint">入力例: 09012345678（ハイフンなし）。折り返しのご連絡に使います。</p>
+        <p class="field__error"></p>
+      </div>
+
+      <div class="field">
+        <label for="f-date">ご希望日<span class="tag tag--req">必須</span></label>
+        <input type="date" id="f-date" name="date">
+        <label class="check"><input type="checkbox" name="date-undecided" value="未定">まだ決まっていない（相談だけ）</label>
+        <p class="field__error"></p>
+      </div>
+
+      <div class="field">
+        <label for="f-count">おおよその人数<span class="tag tag--opt">任意</span></label>
+        <input type="text" id="f-count" name="count" inputmode="numeric">
+        <p class="field__hint">入力例: 8</p>
+      </div>
+
+      <div class="field">
+        <label for="f-message">ご相談内容<span class="tag tag--opt">任意</span></label>
+        <textarea id="f-message" name="message"></textarea>
+        <p class="field__hint">例: 個別盛りの内容、アレルギー、ご予算の目安</p>
+      </div>
+
+      <p class="form-note">営業のお電話はいたしません。<small>ご連絡は翌営業日までに差し上げます。</small></p>
+
+      <div class="form-status" id="form-fail" role="alert">
+        <p>送信できませんでした。時間をおいてもう一度お試しいただくか、<a href="tel:0000000000">0256-XX-XXXX</a> へお電話ください。</p>
+      </div>
+
+      <button class="btn btn--primary" type="submit">この内容で相談する</button>
+      <p class="u-note">入力いただいた情報は、ご予約・ご相談への対応にのみ使用します。<a href="/privacy/">プライバシーポリシー</a></p>
+    </form>
+  </div>
+</section>
+</main>
+
+</div>
+<div class="page" data-path="/privacy/">
+<nav class="crumbs section__in" aria-label="現在地"><ol><li><a href="/">トップ</a></li><li aria-current="page">プライバシーポリシー</li></ol></nav>
+<main>
+<div class="page-head">
+  <div class="section__in">
+    <h1>プライバシーポリシー</h1>
+    <p class="lead measure">わいわい肴屋 海老勢（運営: 株式会社ゑびせ）は、お客様の個人情報を次のとおり取り扱います。</p>
+  </div>
+</div>
+
+<section class="section" aria-label="プライバシーポリシー本文">
+  <div class="section__in">
+    <div class="measure">
+      <h2>1. 取得する情報</h2>
+      <p>ご予約・お問い合わせフォームで、お名前・お電話番号・ご相談内容をお預かりします。</p>
+
+      <h2>2. 利用目的</h2>
+      <p>ご予約とご相談への対応、および確認のご連絡にのみ使用します。営業目的のご連絡はいたしません。</p>
+
+      <h2>3. 第三者への提供</h2>
+      <p>法令に基づく場合を除き、ご本人の同意なく第三者に提供しません。</p>
+
+      <h2>4. 管理</h2>
+      <p>お預かりした情報は、対応に必要な期間のみ保管し、適切に管理します。</p>
+
+      <h2>5. お問い合わせ窓口</h2>
+      <p>本ポリシーに関するお問い合わせは、店舗（電話: <a href="tel:0000000000">0256-XX-XXXX</a>）までお願いします。</p>
+
+      <p class="u-note">制定日: 公開日に記載します。</p>
+    </div>
+  </div>
+</section>
+</main>
+
+</div>
+<footer class="site-foot">
+  <div class="site-foot__in">
+    <div>
+      <p class="name">わいわい肴屋 海老勢</p>
+      <p>〒955-0047 新潟県三条市東三条1丁目X-XX<br>
+      電話: <a href="tel:0000000000">0256-XX-XXXX</a><br>
+      昼 11:00–14:30／夜 17:00–23:00（日・祝は22:00まで）<br>
+      月曜定休（最新の営業情報はお電話でご確認ください）</p>
+      <p>姉妹店: 海茶屋（三条市東三条）／運営: 株式会社ゑびせ</p>
+    </div>
+    <nav class="foot-nav" aria-label="フッターメニュー">
+      <ul>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/menu/">お品書き</a></li>
+        <li><a href="/party/">ご宴会</a></li>
+        <li><a href="/access/">店舗案内</a></li>
+        <li><a href="/reserve/">ご予約</a></li>
+        <li><a href="/privacy/">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p class="copyright">© 2026 わいわい肴屋 海老勢</p>
+  </div>
+</footer>
+<div class="mobile-bar">
+  <a class="bar-tel" href="tel:0000000000">電話をかける</a>
+  <a class="bar-net" href="https://www.hotpepper.jp/strJ000334858/" target="_blank" rel="noopener">ネット予約する</a>
+</div>
+<script>
+// プレビュー用ページ切り替え（サイト内リンクを疑似遷移に変換）
+(() => {
+  "use strict";
+  const show = (path, hash) => {
+    let found = false;
+    document.querySelectorAll(".page").forEach((p) => {
+      const active = p.dataset.path === path;
+      p.classList.toggle("is-active", active);
+      if (active) found = true;
+    });
+    if (!found) return;
+    document.querySelectorAll('.site-nav a').forEach((a) => {
+      if (a.getAttribute("href") === path) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+    if (hash) {
+      const target = document.querySelector(".page.is-active " + hash);
+      if (target) { target.scrollIntoView(); return; }
+    }
+    window.scrollTo(0, 0);
+  };
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a[href]");
+    if (!a) return;
+    const href = a.getAttribute("href");
+    if (!href.startsWith("/")) return;
+    e.preventDefault();
+    const [path, hash] = href.split("#");
+    show(path, hash ? "#" + hash : "");
+  });
+  // プレビューではフォーム送信を成功として扱う（本番は Netlify Forms）
+  const origFetch = window.fetch.bind(window);
+  window.fetch = (url, opts) =>
+    url === "/" && opts && opts.method === "POST"
+      ? Promise.resolve({ ok: true })
+      : origFetch(url, opts);
+})();
+</script>
+<script>
+/* 海老勢 HP — main.js
+   宴会相談フォームの入力チェックと送信。
+   JSが無効でも <form> の通常POST（Netlify Forms）で送信できる。 */
+(() => {
+  "use strict";
+
+  const form = document.querySelector("[data-consult-form]");
+  if (!form) return;
+
+  // JSが動く環境ではブラウザ標準の検証を止め、日本語の文言で項目の隣に出す
+  form.setAttribute("novalidate", "");
+
+  const doneBox = document.getElementById("form-done");
+  const failBox = document.getElementById("form-fail");
+
+  const setError = (fieldEl, inputEl, message) => {
+    const errorEl = fieldEl.querySelector(".field__error");
+    if (message) {
+      fieldEl.classList.add("is-error");
+      if (errorEl) errorEl.textContent = message;
+      inputEl.setAttribute("aria-invalid", "true");
+    } else {
+      fieldEl.classList.remove("is-error");
+      inputEl.removeAttribute("aria-invalid");
+    }
+  };
+
+  const validators = [
+    {
+      input: form.elements["name"],
+      validate: (v) => (v.trim() ? "" : "お名前を入力してください"),
+    },
+    {
+      input: form.elements["tel"],
+      validate: (v) => {
+        const digits = v.replace(/[\s-]/g, "");
+        if (!digits) return "お電話番号を入力してください";
+        if (!/^0\d{9,10}$/.test(digits)) return "電話番号はハイフンなしの数字で入力してください";
+        return "";
+      },
+    },
+    {
+      input: form.elements["date"],
+      validate: (v) => {
+        const undecided = form.elements["date-undecided"];
+        if (v || (undecided && undecided.checked)) return "";
+        return "ご希望日を選ぶか、「まだ決まっていない」を選んでください";
+      },
+    },
+  ];
+
+  const validateAll = () => {
+    let firstInvalid = null;
+    for (const { input, validate } of validators) {
+      if (!input) continue;
+      const field = input.closest(".field");
+      const message = validate(input.value);
+      setError(field, input, message);
+      if (message && !firstInvalid) firstInvalid = input;
+    }
+    return firstInvalid;
+  };
+
+  // 入力し直したらその場でエラーを消す
+  for (const { input, validate } of validators) {
+    if (!input) continue;
+    input.addEventListener("input", () => {
+      const field = input.closest(".field");
+      if (field.classList.contains("is-error") && !validate(input.value)) {
+        setError(field, input, "");
+      }
+    });
+  }
+  const undecided = form.elements["date-undecided"];
+  if (undecided) {
+    undecided.addEventListener("change", () => {
+      const dateInput = form.elements["date"];
+      const field = dateInput.closest(".field");
+      if (undecided.checked) setError(field, dateInput, "");
+    });
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (failBox) failBox.classList.remove("is-visible");
+
+    const firstInvalid = validateAll();
+    if (firstInvalid) {
+      firstInvalid.focus();
+      return;
+    }
+
+    const submitBtn = form.querySelector('[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = "送信しています…";
+
+    try {
+      const body = new URLSearchParams(new FormData(form)).toString();
+      const res = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body,
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      form.hidden = true;
+      if (doneBox) {
+        doneBox.classList.add("is-visible");
+        doneBox.focus();
+      }
+    } catch (_err) {
+      if (failBox) {
+        failBox.classList.add("is-visible");
+      }
+      submitBtn.disabled = false;
+      submitBtn.textContent = "この内容で相談する";
+    }
+  });
+})();
+
+</script>
