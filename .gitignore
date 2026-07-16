@@ -1,0 +1,30 @@
+# 秘匿情報 — 絶対にコミットしない
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+
+# クライアントの実データ
+clients/**/private/
+clients/**/*.csv
+clients/**/*.xlsx
+
+# 依存関係・ビルド成果物
+node_modules/
+dist/
+build/
+.next/
+.astro/
+
+# OS / エディタ
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# ログ
+*.log
+npm-debug.log*
