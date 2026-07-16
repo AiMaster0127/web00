@@ -1,0 +1,5 @@
+# 旧サイト（ebise.jp）からの301リダイレクト — Netlify用
+# ⚠ 検索結果から判明した分のみ。公開前にサーバーの全ファイル一覧で漏れを確認すること（sitemap.md 参照）
+/access.html            /access/   301
+/ebise_menu.html        /menu/     301
+/ebise_corsemenu.html   /party/    301

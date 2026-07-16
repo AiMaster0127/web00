@@ -1,0 +1,93 @@
+<div class="page-head">
+  <div class="section__in">
+    <h1>ご予約・お問い合わせ</h1>
+    <p class="lead measure">お席の予約は、お電話がいちばん早く確実です。宴会のご相談は、フォームからも受け付けています。</p>
+  </div>
+</div>
+
+<section class="section" aria-labelledby="tel-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">電</span>
+      <h2 id="tel-title">電話で予約する</h2>
+    </div>
+    <p><a class="tel-big" href="{{TEL_HREF}}">{{TEL_DISPLAY}}</a></p>
+    <p>受付は営業時間内（昼 11:00–14:30／夜 17:00–23:00、月曜定休）。<br>今夜の一席も、来月の宴会も、同じ番号で承ります。</p>
+  </div>
+</section>
+
+<section class="section section--dim" aria-labelledby="net-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">網</span>
+      <h2 id="net-title">ネット予約する</h2>
+    </div>
+    <p class="measure">営業時間外の方や、電話が苦手な方はこちらから。</p>
+    <div class="btn-row">
+      <a class="btn btn--ghost" href="{{HOTPEPPER}}" target="_blank" rel="noopener">ホットペッパーで予約する<span class="ext" aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="form" aria-labelledby="form-title">
+  <div class="section__in">
+    <div class="sec-head">
+      <span class="fuda" aria-hidden="true">宴</span>
+      <h2 id="form-title">宴会の相談をする</h2>
+    </div>
+    <p class="measure">日程が決まっていなくても構いません。人数とご予算の目安だけで、コースのご提案ができます。</p>
+
+    <div class="form-status" id="form-done" role="status" tabindex="-1">
+      <h3>送信しました</h3>
+      <p>翌営業日までにお電話でご連絡します。お急ぎの場合は <a href="{{TEL_HREF}}">{{TEL_DISPLAY}}</a> へお電話ください。</p>
+    </div>
+
+    <form class="form" name="party-consult" method="POST" action="/reserve/" data-netlify="true" data-netlify-honeypot="company" data-consult-form>
+      <input type="hidden" name="form-name" value="party-consult">
+      <p class="hp-field" aria-hidden="true">
+        <label>この欄には入力しないでください<input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+      </p>
+
+      <div class="field">
+        <label for="f-name">お名前<span class="tag tag--req">必須</span></label>
+        <input type="text" id="f-name" name="name" autocomplete="name" required>
+        <p class="field__error"></p>
+      </div>
+
+      <div class="field">
+        <label for="f-tel">お電話番号<span class="tag tag--req">必須</span></label>
+        <input type="tel" id="f-tel" name="tel" inputmode="numeric" autocomplete="tel" required>
+        <p class="field__hint">入力例: 09012345678（ハイフンなし）。折り返しのご連絡に使います。</p>
+        <p class="field__error"></p>
+      </div>
+
+      <div class="field">
+        <label for="f-date">ご希望日<span class="tag tag--req">必須</span></label>
+        <input type="date" id="f-date" name="date">
+        <label class="check"><input type="checkbox" name="date-undecided" value="未定">まだ決まっていない（相談だけ）</label>
+        <p class="field__error"></p>
+      </div>
+
+      <div class="field">
+        <label for="f-count">おおよその人数<span class="tag tag--opt">任意</span></label>
+        <input type="text" id="f-count" name="count" inputmode="numeric">
+        <p class="field__hint">入力例: 8</p>
+      </div>
+
+      <div class="field">
+        <label for="f-message">ご相談内容<span class="tag tag--opt">任意</span></label>
+        <textarea id="f-message" name="message"></textarea>
+        <p class="field__hint">例: 個別盛りの内容、アレルギー、ご予算の目安</p>
+      </div>
+
+      <p class="form-note">営業のお電話はいたしません。<small>ご連絡は翌営業日までに差し上げます。</small></p>
+
+      <div class="form-status" id="form-fail" role="alert">
+        <p>送信できませんでした。時間をおいてもう一度お試しいただくか、<a href="{{TEL_HREF}}">{{TEL_DISPLAY}}</a> へお電話ください。</p>
+      </div>
+
+      <button class="btn btn--primary" type="submit">この内容で相談する</button>
+      <p class="u-note">入力いただいた情報は、ご予約・ご相談への対応にのみ使用します。<a href="/privacy/">プライバシーポリシー</a></p>
+    </form>
+  </div>
+</section>

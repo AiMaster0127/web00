@@ -1,0 +1,8 @@
+{
+  "trailingSlash": true,
+  "redirects": [
+    { "source": "/access.html", "destination": "/access/", "permanent": true },
+    { "source": "/ebise_menu.html", "destination": "/menu/", "permanent": true },
+    { "source": "/ebise_corsemenu.html", "destination": "/party/", "permanent": true }
+  ]
+}
