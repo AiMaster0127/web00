@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="山田工務店">
+  <rect width="1200" height="630" fill="#122d40"/>
+  <g fill="none" stroke="#ffffff" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" opacity="0.16">
+    <path d="M820 300 L980 190 L1140 300"/>
+    <path d="M860 275 L860 380 L1100 380 L1100 275"/>
+  </g>
+  <rect x="90" y="250" width="64" height="4" fill="#7fb2cf"/>
+  <text x="90" y="330" fill="#ffffff" font-family="serif" font-size="82" font-weight="700" letter-spacing="4">山田工務店</text>
+  <text x="92" y="392" fill="#cfe0ea" font-family="sans-serif" font-size="30" letter-spacing="3">新潟県三条市｜注文住宅・リフォーム</text>
+  <text x="92" y="452" fill="#9fc0d2" font-family="sans-serif" font-size="24" letter-spacing="2">自社の職人が施工／創業1994年</text>
+</svg>

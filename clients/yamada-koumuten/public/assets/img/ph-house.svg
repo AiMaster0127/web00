@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" role="img" aria-label="施工事例（サンプル画像）">
+  <rect width="480" height="360" fill="#f1ede4"/>
+  <g fill="none" stroke="#16405c" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.9">
+    <path d="M120 205 L240 128 L360 205"/>
+    <path d="M150 190 L150 262 L330 262 L330 190"/>
+    <rect x="222" y="212" width="36" height="50"/>
+    <rect x="176" y="206" width="34" height="30"/>
+    <rect x="270" y="206" width="34" height="30"/>
+  </g>
+  <line x1="120" y1="288" x2="360" y2="288" stroke="#1d1b18" stroke-width="1" opacity="0.2"/>
+  <text x="240" y="312" text-anchor="middle" fill="#55504a" font-family="sans-serif" font-size="15" letter-spacing="1">注文住宅｜写真は差し替えます</text>
+</svg>

@@ -1,0 +1,86 @@
+<section class="page-head">
+  <div class="container">
+    <h1 class="page-head__title">お問い合わせ</h1>
+    <p class="page-head__lead">見積りも相談も無料です。「まだ具体的でない」段階でも大丈夫です。お急ぎの方は電話が早いです。</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container--narrow">
+    <div class="contact-tel">
+      <p class="label">電話でのお問い合わせ</p>
+      <a class="contact-tel__num" href="tel:0256XXXXXX">0256-XX-XXXX</a>
+      <p class="contact-tel__hours">受付 9:00–18:00／日曜定休</p>
+    </div>
+
+    <div class="section-head section-head--form">
+      <p class="label">フォームでのお問い合わせ</p>
+      <h2 class="section-head__title">フォームで相談する</h2>
+    </div>
+
+    <form class="form" id="contact-form" action="https://formspree.io/f/REPLACE_WITH_ENDPOINT" method="POST" novalidate>
+      <p class="form__note">しつこい営業のご連絡はいたしません。いただいた情報は、お問い合わせへの対応にのみ使用します。</p>
+
+      <div class="field">
+        <label class="field__label" for="type">お問い合わせ種別<span class="req">必須</span></label>
+        <select class="field__control" id="type" name="種別" required aria-describedby="type-err">
+          <option value="">選んでください</option>
+          <option value="見積り・相談">見積り・相談</option>
+          <option value="リフォーム">リフォーム</option>
+          <option value="採用応募">採用応募</option>
+          <option value="その他">その他</option>
+        </select>
+        <p class="field__error" id="type-err" hidden>お問い合わせ種別を選んでください。</p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="name">お名前<span class="req">必須</span></label>
+        <input class="field__control" id="name" name="お名前" type="text" autocomplete="name" required aria-describedby="name-err">
+        <p class="field__error" id="name-err" hidden>お名前を入力してください。</p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="tel">お電話番号<span class="req">必須</span></label>
+        <input class="field__control" id="tel" name="電話番号" type="tel" inputmode="tel" autocomplete="tel"
+               placeholder="例：09012345678（ハイフンなし）" required aria-describedby="tel-hint tel-err">
+        <p class="field__hint" id="tel-hint">日中つながる番号だと助かります。</p>
+        <p class="field__error" id="tel-err" hidden>お電話番号を入力してください。</p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="email">メールアドレス<span class="opt">任意</span></label>
+        <input class="field__control" id="email" name="メール" type="email" inputmode="email" autocomplete="email"
+               placeholder="例：you@example.com" aria-describedby="email-err">
+        <p class="field__error" id="email-err" hidden>メールアドレスに「@」が入っていません。</p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="place">ご住所・工事予定地<span class="opt">任意</span></label>
+        <input class="field__control" id="place" name="工事予定地" type="text" autocomplete="address-level2" placeholder="例：三条市○○">
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="message">お問い合わせ内容<span class="req">必須</span></label>
+        <textarea class="field__control" id="message" name="内容" rows="6" required aria-describedby="message-err"
+                  placeholder="ご相談の内容、ご予算やご希望の時期など、分かる範囲で。"></textarea>
+        <p class="field__error" id="message-err" hidden>お問い合わせ内容を入力してください。</p>
+      </div>
+
+      <div class="field field--check">
+        <input class="field__checkbox" id="consent" name="同意" type="checkbox" required aria-describedby="consent-err">
+        <label class="field__checklabel" for="consent">個人情報の取り扱いに同意します（対応のみに使用し、第三者には提供しません）<span class="req">必須</span></label>
+        <p class="field__error" id="consent-err" hidden>同意にチェックしてください。</p>
+      </div>
+
+      <!-- スパム対策（人間には見えないハニーポット） -->
+      <div class="hp-field" aria-hidden="true">
+        <label for="company-website">この欄は入力しないでください</label>
+        <input id="company-website" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
+      </div>
+
+      <p class="form__after">送信後、2営業日以内にご連絡します。</p>
+      <button class="btn btn--primary btn--lg btn--block" type="submit">この内容で送信する</button>
+      <p class="form__status" id="form-status" role="alert" hidden></p>
+    </form>
+  </div>
+</section>
